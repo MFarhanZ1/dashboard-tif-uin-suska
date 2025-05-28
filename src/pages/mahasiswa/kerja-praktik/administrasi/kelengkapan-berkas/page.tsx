@@ -107,9 +107,10 @@ export default function MahasiswaKerjaPraktekDaftarKPKelengkapanBerkasPage() {
         setDataKPTerbaru(res.data);
         setTanggalPendaftaran(res.data);
 
-        IsPendaftaranKPLanjutClosed().then((res) =>
-          setIsPendaftaranKPLanjutClosed(res)
-        );
+        IsPendaftaranKPLanjutClosed().then((res) => {
+          console.log(res);
+          setIsPendaftaranKPLanjutClosed(res);
+        });
 
         return res.data;
       }),
@@ -168,6 +169,7 @@ export default function MahasiswaKerjaPraktekDaftarKPKelengkapanBerkasPage() {
               Link :{" "}
             </Label>
             <Input
+              required
               key="surat-pengantar"
               onChange={(e) => setInputValue(e.target.value)}
               value={
@@ -227,6 +229,7 @@ export default function MahasiswaKerjaPraktekDaftarKPKelengkapanBerkasPage() {
               Link :{" "}
             </Label>
             <Input
+              required
               key="surat-balasan"
               onChange={(e) => setInputValue(e.target.value)}
               value={
@@ -300,6 +303,7 @@ export default function MahasiswaKerjaPraktekDaftarKPKelengkapanBerkasPage() {
               Id Pengajuan Pembimbing KP :{" "}
             </Label>
             <Input
+              required
               key="id-pengajuan-dospem"
               onChange={(e) => setInputValue(e.target.value)}
               value={
@@ -321,7 +325,7 @@ export default function MahasiswaKerjaPraktekDaftarKPKelengkapanBerkasPage() {
       </Card>
     );
   } else if (currentPage === 7 && dataKPTerbaru?.level_akses! >= 7) {
-    if (dataKPTerbaru?.level_akses === 8) {
+    if (dataKPTerbaru?.level_akses === 7) {
       if (dataKPTerbaru.catatan_penolakan) {
         statusValidasi.style = "bg-red-600";
         statusValidasi.message = dataKPTerbaru.catatan_penolakan;
@@ -359,6 +363,7 @@ export default function MahasiswaKerjaPraktekDaftarKPKelengkapanBerkasPage() {
               Link :{" "}
             </Label>
             <Input
+              required
               key="surat-penunjukkan-dospem"
               onChange={(e) => setInputValue(e.target.value)}
               value={

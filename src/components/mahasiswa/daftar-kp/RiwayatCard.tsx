@@ -19,15 +19,15 @@ export default function RiwayatCard({
     <div className="border-[1px] dark:bg-black border-green-600 bg-green-100 rounded-lg p-3 mb-2">
       <div className="flex justify-between">
         <div className="flex justify-start gap-8">
-          <p className="text-xs font-bold">
+          <div className="flex items-center gap-1 text-xs font-bold">
             <ClipboardList /> Status KP : {status}
-          </p>
-          <p className="text-xs font-bold">
+          </div>
+          <div className="flex items-center gap-1 text-xs font-bold">
             <ClipboardList /> {namaInstansi}
-          </p>
-          <p className="text-xs font-bold">
+          </div>
+          <div className="flex items-center gap-1 text-xs font-bold">
             <ClipboardList /> {tanggalMulai}
-          </p>
+          </div>
         </div>
         <p className="text-xs">Progress Terkini : Pendaftaran KP</p>
       </div>

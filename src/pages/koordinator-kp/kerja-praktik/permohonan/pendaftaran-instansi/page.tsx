@@ -86,9 +86,9 @@ function KoordinatorKerjaPraktikInstansiPage() {
                 <Card1 key={i} text={item.text} count={item.count} />
               ))}
             </div>
-            <div className="w-fit rounded-lg bg-gray-200">
+            <div className="w-fit rounded-lg flex gap-2 my-2">
               {buttonData.map((item, i) => (
-                <button
+                <Button
                   key={i}
                   onClick={() => setCurrentTab(item.text as Tab)}
                   className={`p-2 rounded-lg ${
@@ -98,7 +98,7 @@ function KoordinatorKerjaPraktikInstansiPage() {
                   } text-sm font-semibold tracking-wide`}
                 >
                   {item.text.replace("_", " ")}
-                </button>
+                </Button>
               ))}
             </div>
             <div className="rounded-lg overflow-hidden border-[1px] border-gray-300">

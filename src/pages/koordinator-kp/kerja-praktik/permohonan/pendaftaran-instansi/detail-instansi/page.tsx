@@ -70,7 +70,11 @@ function KoordinatorKerjaPraktikDetailInstansiPage() {
 
       setNamaInput(response.data.data.nama);
       setJenisInput(response.data.data.jenis);
-      setStatusInput(response.data.data.status);
+      if (response.data.data.status === "Pending") {
+        setStatusInput("Aktif");
+      } else {
+        setStatusInput(response.data.data.status);
+      }
       setNama_PjInput(response.data.data.nama_pj);
       setNo_Hp_PjInput(response.data.data.no_hp_pj);
       setProfil_SingkatInput(response.data.data.profil_singkat);
@@ -79,30 +83,11 @@ function KoordinatorKerjaPraktikDetailInstansiPage() {
       setLongitudeInput(response.data.data.longitude);
 
       setDataInstansi(response.data.data);
+      if (response.data.data.status === "Pending") {
+        setIsEditing(() => true);
+      }
     })();
   }, []);
-
-  async function handleOnAccept() {
-    setIsLoading((prev) => !prev);
-    const axios = api();
-    const response = await axios.post(
-      `${
-        import.meta.env.VITE_BASE_URL_KERJA_PRAKTIK
-      }/koordinator-kp/daftar-kp/edit-data-instansi`,
-      {
-        id,
-        status: "Aktif",
-      }
-    );
-
-    setResponse(response.data.message as string);
-
-    const pointer = setTimeout(function () {
-      setResponse(null);
-      navigate("/koordinator-kp/kerja-praktik/instansi");
-      clearTimeout(pointer);
-    }, 1000);
-  }
 
   async function handleOnRejectOrDelete() {
     setIsLoading((prev) => !prev);
@@ -174,7 +159,7 @@ function KoordinatorKerjaPraktikDetailInstansiPage() {
   return (
     <DashboardLayout>
       {response && (
-        <Card className="absolute left-[50%] -translate-x-1/2 top-[20%] bg-green-600 rounded-lg p-4 text-white">
+        <Card className="fixed z-[999] left-[50%] -translate-x-1/2 top-[20%] bg-green-600 rounded-lg p-4 text-white">
           {response}
         </Card>
       )}
@@ -284,14 +269,15 @@ function KoordinatorKerjaPraktikDetailInstansiPage() {
                         }
                         value={
                           isEditing
-                            ? profil_singkatInput
-                            : dataInstansi.profil_singkat
+                            ? profil_singkatInput || ""
+                            : dataInstansi.profil_singkat || ""
                         }
                       />
                     ) : (
-                      <Textarea readOnly={true}>
-                        {dataInstansi?.profil_singkat || ""}
-                      </Textarea>
+                      <Textarea
+                        readOnly
+                        value={dataInstansi.profil_singkat || ""}
+                      />
                     )}
                   </CardContent>
                 </Card>
@@ -375,7 +361,7 @@ function KoordinatorKerjaPraktikDetailInstansiPage() {
                       value={isEditing ? latitudeInput : dataInstansi.latitude}
                     />
                   ) : (
-                    <CardDescription>{dataInstansi.longitude}</CardDescription>
+                    <CardDescription>{dataInstansi.latitude}</CardDescription>
                   )}
                   <CardTitle>Alamat : </CardTitle>
                   {isEditing ? (
@@ -425,7 +411,7 @@ function KoordinatorKerjaPraktikDetailInstansiPage() {
             </div>
           </div>
           <CardFooter className="fixed left-0 right-0 py-3 pr-10 bottom-0 flex justify-end gap-4">
-            {!isEditing &&
+            {isEditing &&
               (dataInstansi?.status === "Pending" ? (
                 <>
                   <Button
@@ -437,7 +423,7 @@ function KoordinatorKerjaPraktikDetailInstansiPage() {
                   </Button>
                   <Button
                     disabled={isLoading}
-                    onClick={handleOnAccept}
+                    onClick={handleOnEdit}
                     className="bg-green-600 p-2 rounded-lg text-white font-semibold tracking-wide"
                   >
                     Terima Pengajuan
@@ -461,7 +447,7 @@ function KoordinatorKerjaPraktikDetailInstansiPage() {
                   </Button>
                 </>
               ))}
-            {isEditing && (
+            {isEditing && dataInstansi?.status !== "Pending" && (
               <>
                 <Button
                   disabled={isLoading}

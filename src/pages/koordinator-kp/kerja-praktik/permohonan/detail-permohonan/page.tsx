@@ -14,10 +14,8 @@ import {
   ContactRound,
   Calendar,
   Building2,
-  FileText,
-  ClipboardPenLine,
 } from "lucide-react";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, FormEvent } from "react";
 import { KPDetailsInterface } from "@/interfaces/pages/mahasiswa/pendaftaran-kp.interface";
@@ -25,6 +23,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/lib/axios-instance";
+import { useQuery } from "@tanstack/react-query";
+import APIDaftarKP from "@/services/api/mahasiswa/daftar-kp.service";
 
 const KoordinatorKerjaPraktikPermohonanDetailPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -36,11 +36,25 @@ const KoordinatorKerjaPraktikPermohonanDetailPage = () => {
     | null
     | string
   >(null);
+
   const [isRejectButtonClicked, setIsRejectButtonClicked] =
     useState<boolean>(false);
   const [rejectMessage, setRejectMessage] = useState<string>("");
-  const { search } = useLocation();
-  const query = new URLSearchParams(search);
+  const [level_akses, setlevel_akses] = useState(1);
+  const [id_instansi, setid_instansi] = useState("");
+  const [tujuan_surat_instansi, settujuan_surat_instansi] = useState("");
+  const [link_surat_pengantar, setlink_Surat_Pengantar] = useState("");
+  const [link_surat_balasan, setlink_surat_balasan] = useState("");
+  const [id_surat_pengajuan_dospem, set_id_surat_pengajuan_dospem] =
+    useState("");
+  const [link_surat_penunjukan_dospem, setlink_surat_penunjukan_dospem] =
+    useState("");
+  const [link_surat_perpanjangan_kp, setlink_surat_perpanjangan_kp] =
+    useState("");
+  const [kelas_kp, setkelas_kp] = useState("");
+  const [alasan_lanjut_kp, setalasan_lanjut_kp] = useState("");
+  const [judul_kp, setjudul_kp] = useState("");
+  const [status, setstatus] = useState("");
   const [biodataMahasiswa, setBiodataMahasiswa] = useState<KPDetailsInterface>({
     id: "4432432",
     mahasiswa: {
@@ -82,6 +96,11 @@ const KoordinatorKerjaPraktikPermohonanDetailPage = () => {
   //       return "bg-gray-500";
   //   }
   // };
+
+  const { data: dataInstansi } = useQuery({
+    queryKey: ["koordinator-kp-data-instansi-mahasiswa"],
+    queryFn: () => APIDaftarKP.getAllDataInstansi().then((res) => res.data),
+  });
 
   async function handleOnAccept(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -236,11 +255,15 @@ const KoordinatorKerjaPraktikPermohonanDetailPage = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+                      <Label
+                        htmlFor="nama-instansi"
+                        className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1"
+                      >
                         Nama Instansi / Perusahaan
-                      </label>
+                      </Label>
                       <Input
                         key="nama-instansi"
+                        id="nama-instansi"
                         value={
                           biodataMahasiswa.instansi?.nama || "Tidak tersedia"
                         }
@@ -253,10 +276,14 @@ const KoordinatorKerjaPraktikPermohonanDetailPage = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+                      <Label
+                        htmlFor="tujuan-surat-instansi"
+                        className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1"
+                      >
                         Tujuan Surat Instansi/ Perusahaan
-                      </label>
+                      </Label>
                       <Textarea
+                        id="tujuan-surat-instansi"
                         key="tujuan_surat_instansi"
                         value={
                           biodataMahasiswa?.tujuan_surat_instansi ||
@@ -283,7 +310,9 @@ const KoordinatorKerjaPraktikPermohonanDetailPage = () => {
                         biodataMahasiswa.level_akses === 2 ? "bg-green-600" : ""
                       }`}
                     >
-                      <label>Surat Pengantar : </label>
+                      <Label htmlFor="surat-pengantar">
+                        Surat Pengantar :{" "}
+                      </Label>
                       <Input
                         className="p-2 border border-gray-300 rounded-lg bg-gray-100"
                         type="text"
@@ -297,7 +326,9 @@ const KoordinatorKerjaPraktikPermohonanDetailPage = () => {
                         biodataMahasiswa.level_akses === 4 ? "bg-green-600" : ""
                       }`}
                     >
-                      <label>Surat Balasan Instansi : </label>
+                      <Label htmlFor="surat-balasan">
+                        Surat Balasan Instansi :{" "}
+                      </Label>
                       <Input
                         className="p-2 border border-gray-300 rounded-lg bg-gray-100"
                         type="text"
@@ -311,7 +342,9 @@ const KoordinatorKerjaPraktikPermohonanDetailPage = () => {
                         biodataMahasiswa.level_akses === 6 ? "bg-green-600" : ""
                       }`}
                     >
-                      <label>Id Pengajuan Dosen Pembimbing : </label>
+                      <Label htmlFor="id-pengajuan">
+                        Id Pengajuan Dosen Pembimbing :{" "}
+                      </Label>
                       <Input
                         className="p-2 border border-gray-300 rounded-lg bg-gray-100"
                         type="text"
@@ -327,7 +360,9 @@ const KoordinatorKerjaPraktikPermohonanDetailPage = () => {
                         biodataMahasiswa.level_akses === 8 ? "bg-green-600" : ""
                       }`}
                     >
-                      <label>Surat Penunjukkan Dosen Pembimbing : </label>
+                      <Label htmlFor="surat-penunjukkan">
+                        Surat Penunjukkan Dosen Pembimbing :{" "}
+                      </Label>
                       <Input
                         className="p-2 border border-gray-300 rounded-lg bg-gray-100"
                         type="text"
@@ -337,7 +372,6 @@ const KoordinatorKerjaPraktikPermohonanDetailPage = () => {
                         }
                       />
                     </div>
-
                     <div
                       className={`mb-3 p-2 rounded-lg flex flex-col ${
                         biodataMahasiswa.level_akses === 10
@@ -345,15 +379,29 @@ const KoordinatorKerjaPraktikPermohonanDetailPage = () => {
                           : ""
                       }`}
                     >
-                      <label>Surat Perpanjangan KP : </label>
-                      <Input
-                        className="p-2 border border-gray-300 rounded-lg bg-gray-100"
-                        type="text"
-                        id="surat-lanjut"
-                        value={
-                          biodataMahasiswa?.link_surat_perpanjangan_kp || ""
-                        }
-                      />
+                      <div>
+                        <Label htmlFor="surat-lanjut">
+                          Surat Perpanjangan KP :{" "}
+                        </Label>
+                        <Input
+                          className="p-2 border border-gray-300 rounded-lg bg-gray-100"
+                          type="text"
+                          id="surat-lanjut"
+                          value={
+                            biodataMahasiswa?.link_surat_perpanjangan_kp || ""
+                          }
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="alasan-lanjut-kp">
+                          Alasan Lanjut Kerja Praktek :
+                        </Label>
+                        <Textarea
+                          className="p-2 border border-gray-300 rounded-lg bg-gray-100"
+                          id="alasan-lanjut-kp"
+                          value={biodataMahasiswa?.alasan_lanjut_kp || ""}
+                        />
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -390,12 +438,14 @@ const KoordinatorKerjaPraktikPermohonanDetailPage = () => {
       case "Lanjut":
         return (
           <>
-            <Card className="mt-6 rounded-lg border border-gray-100 dark:border-gray-700 shadow-md overflow-hidden">
+            {/* Riwayat Permohonan Kerja Praktik Section */}
+            <Card className="mt-6 rounded-lg  border border-gray-100 dark:border-gray-700 shadow-md overflow-hidden">
               <div className="p-6">
-                <h1 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center">
-                  <ClipboardPenLine className="h-5 w-5 mr-2" />
-                  Validasi Berkas
-                </h1>
+                <CardHeader>
+                  <CardTitle className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-6 flex items-center">
+                    Riwayat Permohonan Kerja Praktik
+                  </CardTitle>
+                </CardHeader>
 
                 {/* Periode Kerja Praktik */}
                 <Card className="mb-6 bg-white dark:bg-gray-800/50 rounded-lg p-5 border border-gray-100 dark:border-gray-700 shadow-sm">
@@ -406,116 +456,214 @@ const KoordinatorKerjaPraktikPermohonanDetailPage = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-                          Tanggal Mulai
-                        </Label>
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <Calendar className="h-4 w-4 text-gray-500" />
-                          </div>
-                          <Input
-                            type="date"
-                            key="tanggal_mulai_gagal"
-                            value={biodataMahasiswa.tanggal_mulai
-                              .slice(0, 10)
-                              .replaceAll("-", "/")}
-                            className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-md block w-full pl-10 p-2.5 
-                          dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:placeholder-gray-400 
-                          focus:ring-primary focus:border-primary focus:outline-none"
-                          />
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+                        Tanggal Mulai
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                          <Calendar className="h-4 w-4 text-gray-500" />
                         </div>
-                      </div>
-                      <div>
-                        <Label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-                          Tanggal Selesai
-                        </Label>
-                        <div className="relative">
-                          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                            <Calendar className="h-4 w-4 text-gray-500" />
-                          </div>
-                          <Input
-                            key="tanggal_selesai_gagal"
-                            type="date"
-                            className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-md block w-full pl-10 p-2.5 
-                          dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:placeholder-gray-400 
-                          focus:ring-primary focus:border-primary focus:outline-none"
-                          />
-                        </div>
+                        <Input
+                          value={biodataMahasiswa.tanggal_mulai
+                            .slice(0, 10)
+                            .replaceAll("-", "/")}
+                          key="tanggal-mulai"
+                          type="Input"
+                          className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-md block w-full pl-10 p-2.5 
+                        dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:placeholder-gray-400 
+                        focus:ring-primary focus:border-primary focus:outline-none"
+                        />
                       </div>
                     </div>
-
-                    {biodataMahasiswa.status === "Lanjut" && (
-                      <div className="mt-2">
-                        <p className="text-sm font-medium text-red-600">
-                          Hari Ini Telah Lewat 7 Hari Dari Waktu Selesai
-                          Mahasiswa !
-                        </p>
-                      </div>
-                    )}
                   </CardContent>
                 </Card>
 
-                {/* Dokumen Penunjukan Dosen Pembimbing */}
+                {/* Instansi/Perusahaan */}
                 <Card className="mb-6 bg-white dark:bg-gray-800/50 rounded-lg p-5 border border-gray-100 dark:border-gray-700 shadow-sm">
                   <CardHeader>
                     <CardTitle className="text-md font-semibold text-gray-700 dark:text-gray-200 mb-4 flex items-center">
-                      <FileText className="h-5 w-5 mr-2" />
-                      Dokumen Penunjukan Dosen Pembimbing
+                      <Building2 className="h-5 w-5 mr-2" />
+                      Instansi/Perusahaan
                     </CardTitle>
                   </CardHeader>
-                  <div className="mb-4">
-                    <Label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-                      Link gdrive <span className="text-red-500">*</span>
-                    </Label>
-                    <Textarea
-                      key="dokumen_penunjukkan_dosen_pembimbing"
-                      placeholder="Masukkan link gdrive..."
-                      className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-md block w-full p-2.5 
+                  <CardContent>
+                    <div className="mb-4">
+                      <Label
+                        htmlFor="nama-instansi"
+                        className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1"
+                      >
+                        Nama Instansi / Perusahaan
+                      </Label>
+                      <Input
+                        key="nama-instansi"
+                        id="nama-instansi"
+                        value={
+                          biodataMahasiswa.instansi?.nama || "Tidak tersedia"
+                        }
+                        type="text"
+                        className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-md block w-full p-2.5 
                       dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:placeholder-gray-400 
                       focus:ring-primary focus:border-primary focus:outline-none"
-                    />
-                  </div>
-                </Card>
+                        placeholder="Masukkan nama instansi"
+                      />
+                    </div>
 
-                {/* Alasan Perpanjangan */}
-                <Card className="mb-6 bg-white dark:bg-gray-800/50 rounded-lg p-5 border border-gray-100 dark:border-gray-700 shadow-sm">
-                  <CardHeader>
-                    <CardTitle className="text-md font-semibold text-gray-700 dark:text-gray-200 mb-4 flex items-center">
-                      Alasan mengajukan perpanjangan waktu pelaksanaan KP
-                      <span className="text-red-500">*</span>
-                    </CardTitle>
-                  </CardHeader>
-
-                  <CardContent>
-                    <Textarea
-                      key="tujuan_surat_instansi_perpanjangan_kp"
-                      placeholder="Masukkan alasan perpanjangan..."
-                      className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-md block w-full p-2.5 
+                    <div>
+                      <Label
+                        htmlFor="tujuan-surat-instansi"
+                        className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1"
+                      >
+                        Tujuan Surat Instansi/ Perusahaan
+                      </Label>
+                      <Textarea
+                        id="tujuan-surat-instansi"
+                        key="tujuan_surat_instansi"
+                        value={
+                          biodataMahasiswa?.tujuan_surat_instansi ||
+                          "Tidak tersedia"
+                        }
+                        className="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-md block w-full p-2.5 
                       dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:placeholder-gray-400 
                       focus:ring-primary focus:border-primary focus:outline-none min-h-24 resize-none"
-                    ></Textarea>
+                        placeholder="Masukkan tujuan surat"
+                      ></Textarea>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="rounded-lg border border-gray-100 shadow-sm p-4 mb-6">
+                  <CardHeader>
+                    <CardTitle className="font-bold tracking-wide text-md text-gray-600">
+                      Berkas Mahasiswa
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div
+                      className={`mb-3 p-2 rounded-lg flex flex-col ${
+                        biodataMahasiswa.level_akses === 2 ? "bg-green-600" : ""
+                      }`}
+                    >
+                      <Label htmlFor="surat-pengantar">
+                        Surat Pengantar :{" "}
+                      </Label>
+                      <Input
+                        className="p-2 border border-gray-300 rounded-lg bg-gray-100"
+                        type="text"
+                        id="surat-pengantar"
+                        value={biodataMahasiswa?.link_surat_pengantar || ""}
+                      />
+                    </div>
+
+                    <div
+                      className={`mb-3 p-2 rounded-lg flex flex-col ${
+                        biodataMahasiswa.level_akses === 4 ? "bg-green-600" : ""
+                      }`}
+                    >
+                      <Label htmlFor="surat-balasan">
+                        Surat Balasan Instansi :{" "}
+                      </Label>
+                      <Input
+                        className="p-2 border border-gray-300 rounded-lg bg-gray-100"
+                        type="text"
+                        id="surat-balasan"
+                        value={biodataMahasiswa?.link_surat_balasan || ""}
+                      />
+                    </div>
+
+                    <div
+                      className={`mb-3 p-2 rounded-lg flex flex-col ${
+                        biodataMahasiswa.level_akses === 6 ? "bg-green-600" : ""
+                      }`}
+                    >
+                      <Label htmlFor="id-pengajuan">
+                        Id Pengajuan Dosen Pembimbing :{" "}
+                      </Label>
+                      <Input
+                        className="p-2 border border-gray-300 rounded-lg bg-gray-100"
+                        type="text"
+                        id="id-pengajuan"
+                        value={
+                          biodataMahasiswa?.id_surat_pengajuan_dospem || ""
+                        }
+                      />
+                    </div>
+
+                    <div
+                      className={`mb-3 p-2 rounded-lg flex flex-col ${
+                        biodataMahasiswa.level_akses === 8 ? "bg-green-600" : ""
+                      }`}
+                    >
+                      <Label htmlFor="surat-penunjukkan">
+                        Surat Penunjukkan Dosen Pembimbing :{" "}
+                      </Label>
+                      <Input
+                        className="p-2 border border-gray-300 rounded-lg bg-gray-100"
+                        type="text"
+                        id="surat-penunjukkan"
+                        value={
+                          biodataMahasiswa?.link_surat_penunjukan_dospem || ""
+                        }
+                      />
+                    </div>
+                    <div
+                      className={`mb-3 p-2 rounded-lg flex flex-col ${
+                        biodataMahasiswa.level_akses === 10
+                          ? "bg-green-600"
+                          : ""
+                      }`}
+                    >
+                      <div>
+                        <Label htmlFor="surat-lanjut">
+                          Surat Perpanjangan KP :{" "}
+                        </Label>
+                        <Input
+                          className="p-2 border border-gray-300 rounded-lg bg-gray-100"
+                          type="text"
+                          id="surat-lanjut"
+                          value={
+                            biodataMahasiswa?.link_surat_perpanjangan_kp || ""
+                          }
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="alasan-lanjut-kp">
+                          Alasan Lanjut Kerja Praktek :
+                        </Label>
+                        <Textarea
+                          className="p-2 border border-gray-300 rounded-lg bg-gray-100"
+                          id="alasan-lanjut-kp"
+                          value={biodataMahasiswa?.alasan_lanjut_kp || ""}
+                        />
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
 
                 {/* Action Buttons */}
-                <CardFooter>
-                  <div className="flex justify-end gap-3 mt-6">
-                    <Button
-                      disabled={isLoading}
-                      className="px-4 py-2 bg-white border border-gray-200 text-gray-700 hover:bg-gray-100 rounded-md shadow-sm transition-all duration-200"
-                    >
-                      Tolak Permohonan
-                    </Button>
-                    <Button
-                      disabled={isLoading}
-                      className="px-4 py-2 bg-green-600 text-white hover:bg-green-700 rounded-md shadow-sm transition-all duration-200"
-                    >
-                      Validasi Permohonan
-                    </Button>
-                  </div>
-                </CardFooter>
+
+                {biodataMahasiswa?.level_akses !== 0 &&
+                  biodataMahasiswa?.level_akses % 2 === 0 && (
+                    <div className="flex justify-end gap-3 mt-6">
+                      <Button
+                        onClick={() => setIsRejectButtonClicked(true)}
+                        disabled={isLoading}
+                        className={
+                          "px-4 py-2 bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 rounded-md shadow-sm transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50"
+                        }
+                      >
+                        Tolak Permohonan
+                      </Button>
+                      <form onSubmit={handleOnAccept}>
+                        <Button
+                          disabled={isLoading}
+                          className="px-4 py-2 bg-green-600 text-white hover:bg-green-700 rounded-md shadow-sm transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          Validasi Permohonan
+                        </Button>
+                      </form>
+                    </div>
+                  )}
               </div>
             </Card>
           </>

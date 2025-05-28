@@ -51,16 +51,20 @@ function MahasiswaKerjaPraktikDaftarKPPermohonanFormDaftarInstansiPage() {
         radius
       );
 
-      setResponse(response.data);
+      setResponse(response);
       const pointer = setTimeout(() => {
         setResponse(null);
         clearTimeout(pointer);
-      }, 1000);
-
-      setIsLoading((prev) => !prev);
+      }, 3000);
     } catch (e) {
-      throw new Error("Gagal mengirimkan data");
+      setResponse({ message: "Gagal mengirimkan data", response: false });
+      const pointer = setTimeout(() => {
+        setResponse(null);
+        clearTimeout(pointer);
+      }, 3000);
+      console.log("Gagal mengirimkan data");
     }
+    setIsLoading((prev) => !prev);
   }
 
   function LocationMarker() {
@@ -76,20 +80,24 @@ function MahasiswaKerjaPraktikDaftarKPPermohonanFormDaftarInstansiPage() {
       </Marker>
     );
   }
-
+  console.log(isLoading);
   return (
     <DashboardLayout>
+      {response && response.response && (
+        <Card className="fixed left-1/2 py-2 z-[999] -translate-x-1/2 w-80 bg-green-600 text-white">
+          <p className="text-center text-white font-semibold tracking-wide">
+            {response.message}
+          </p>
+        </Card>
+      )}
       <Card>
         <form onSubmit={handleOnSubmit}>
-          {response && response.response && (
-            <Card className="fixed left-1/2 py-2 -translate-x-1/2 w-80 bg-green-600 text-white">
-              <p className="text-center text-white font-semibold tracking-wide">
-                {response.message}
-              </p>
-            </Card>
-          )}
           {response && !response.response && (
-            <Card className="absolute left-1/2 -translate-x-1/2 w-80 py-2 bg-green-600">
+            <Card
+              className={`fixed left-1/2 -translate-x-1/2 w-80 py-2 ${
+                response.response ? "bg-green-600" : "bg-red-600 z-[999]"
+              }`}
+            >
               <p className="text-center text-white font-semibold tracking-wide">
                 {response.message}
               </p>
@@ -101,8 +109,9 @@ function MahasiswaKerjaPraktikDaftarKPPermohonanFormDaftarInstansiPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="grid md:grid-cols-2 md:gap-8 gap-10">
-            <Card>
+            <Card className="p-3">
               <MapContainer
+                className="z-[0]"
                 center={[position.lat, position.lng]}
                 zoom={13}
                 scrollWheelZoom={true}
@@ -121,6 +130,7 @@ function MahasiswaKerjaPraktikDaftarKPPermohonanFormDaftarInstansiPage() {
                 Longitude
               </Label>
               <Input
+                required
                 className="text-black block w-full border-[1px] border-slate-300 rounded-md p-1 mb-4"
                 type="number"
                 id="longitude"
@@ -140,6 +150,7 @@ function MahasiswaKerjaPraktikDaftarKPPermohonanFormDaftarInstansiPage() {
                 Latitude
               </Label>
               <Input
+                required
                 className="text-black block w-full border-[1px] border-slate-300 rounded-md p-1 mb-4"
                 type="number"
                 id="latitude"
@@ -158,6 +169,7 @@ function MahasiswaKerjaPraktikDaftarKPPermohonanFormDaftarInstansiPage() {
                 Radius
               </Label>
               <Input
+                required
                 className="text-black block w-full border-[1px] border-slate-300 rounded-md p-1 mb-4"
                 type="number"
                 id="radius"
@@ -168,7 +180,7 @@ function MahasiswaKerjaPraktikDaftarKPPermohonanFormDaftarInstansiPage() {
                 }
               />
             </Card>
-            <Card>
+            <Card className="flex flex-col justify-between border-none shadow-none">
               <Card className="border-[1px] border-slate-200 p-3">
                 <CardTitle className="font-bold text-lg mb-2">
                   🏢 Instansi/Perusahaan
@@ -177,6 +189,7 @@ function MahasiswaKerjaPraktikDaftarKPPermohonanFormDaftarInstansiPage() {
                   Nama Instansi / Perusahaan
                 </Label>
                 <Input
+                  required
                   className="text-black block w-full border-[1px] border-slate-300 rounded-md p-1 mb-4"
                   placeholder="Nama Perusahaan..."
                   type="text"
@@ -220,7 +233,7 @@ function MahasiswaKerjaPraktikDaftarKPPermohonanFormDaftarInstansiPage() {
                   rows={5}
                 ></textarea>
               </Card>
-              <Card className="mt-4">
+              <Card className="p-3">
                 <CardTitle className="font-bold text-lg mb-2 md:mt-0 mt-10">
                   🏢 Kontak Instansi
                 </CardTitle>
@@ -231,6 +244,7 @@ function MahasiswaKerjaPraktikDaftarKPPermohonanFormDaftarInstansiPage() {
                   Nama Penanggung Jawab Instansi
                 </Label>
                 <Input
+                  required
                   className="text-black block w-full border-[1px] border-slate-300 rounded-md p-1 mb-4"
                   placeholder="Nama Penanggung Jawab..."
                   type="text"
@@ -245,6 +259,7 @@ function MahasiswaKerjaPraktikDaftarKPPermohonanFormDaftarInstansiPage() {
                   No Telpon Penanggung Jawab Instansi
                 </Label>
                 <Input
+                  required
                   className="text-black block w-full border-[1px] border-slate-300 rounded-md p-1 mb-4"
                   placeholder="+62-000-0000-0000"
                   type="text"
@@ -259,6 +274,7 @@ function MahasiswaKerjaPraktikDaftarKPPermohonanFormDaftarInstansiPage() {
                   Email Penanggung Jawab Instansi
                 </Label>
                 <Input
+                  required
                   className="text-black block w-full border-[1px] border-slate-300 rounded-md p-1"
                   placeholder="example@email.com"
                   type="text"
@@ -271,11 +287,11 @@ function MahasiswaKerjaPraktikDaftarKPPermohonanFormDaftarInstansiPage() {
 
           <CardFooter className="text-end mt-4 sm:flex sm:flex-col sm:gap-2 md:block">
             <Button
-              type="button"
+              type="reset"
               disabled={isLoading}
               className="md:mr-4 py-1 md:w-[198px] font-bold border-black border-[1px] hover:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Batal
+              Reset
             </Button>
             <Button
               type="submit"

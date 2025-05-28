@@ -152,6 +152,7 @@ export default function MahasiswaKerjaPraktekDaftarKpPermohonanPage() {
     );
   }
   if (activeKP) {
+    console.log(activeKP);
     StepComponent = (
       <Card className="rounded-md border-green-500 border-2 py-2 px-4 bg-green-100 dark:bg-black">
         <CardHeader>
