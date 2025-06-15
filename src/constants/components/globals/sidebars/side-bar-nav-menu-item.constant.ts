@@ -3,6 +3,7 @@ import {
   BackpackIcon,
   BookOpen,
   CalendarCheck2Icon,
+  Edit3Icon,
   GraduationCap,
   GraduationCapIcon,
   LayoutGridIcon,
@@ -31,6 +32,11 @@ export const SideBarNavMenuItems: SideBarNavMenuItemsProps = {
     {
       label: "Kerja Praktik",
       menus: [
+        {
+          title: "Pengajuan",
+          url: "/mahasiswa/kerja-praktik/daftar-kp/permohonan",
+          icon: Edit3Icon,
+        },
         {
           title: "Daily Report",
           url: "/mahasiswa/kerja-praktik/daily-report",
@@ -80,6 +86,22 @@ export const SideBarNavMenuItems: SideBarNavMenuItemsProps = {
     {
       label: "Koordinator KP",
       menus: [
+        {
+          title: "Administrasi",
+          url: "#",
+          isActive: true,
+          icon: Edit3Icon,
+          items: [
+            {
+              title: "Pengajuan",
+              url: "/koordinator-kp/kerja-praktik/permohonan",
+            },
+            {
+              title: "Instansi",
+              url: "/koordinator-kp/kerja-praktik/instansi",
+            },
+          ]
+        },
         {
           title: "Monitoring Progres",
           url: "/koordinator-kp/kerja-praktik/daily-report",
