@@ -1,6 +1,15 @@
 import { api } from "@/lib/axios-instance";
 import { DataInstansi } from "@/interfaces/pages/koordinator-kp/kerja-praktik/instansi.interface";
-import { CreatePendaftaranMahasiswaInterface } from "@/interfaces/pages/mahasiswa/kerja-praktik/daftar-kp/pendaftaran.interface";
+import {
+  CreatePendaftaranMahasiswaInterface,
+  UpdatePendaftaranMahasiswaInterface,
+} from "@/interfaces/pages/mahasiswa/kerja-praktik/daftar-kp/pendaftaran.interface";
+import { KPDetailsInterface } from "@/interfaces/pages/mahasiswa/pendaftaran-kp.interface";
+import {
+  CommonResponse,
+  PutMahasiswaParamsInterface,
+} from "@/interfaces/service/api/daftar-kp/koordinator-kp-service.interface";
+import { getTahunAjaranService } from "@/interfaces/service/api/daftar-kp/all.interface";
 
 export default class APIDaftarKP {
   static async getAllPermohonanMahasiswa() {
@@ -14,10 +23,30 @@ export default class APIDaftarKP {
     return data;
   }
 
+  static async updatePendaftaranMahasiswa({
+    judul_kp,
+    kelas_kp,
+  }: UpdatePendaftaranMahasiswaInterface) {
+    const axios = api();
+    const response = await axios.put(
+      `${
+        import.meta.env.VITE_BASE_URL_KERJA_PRAKTIK
+      }/mahasiswa/daftar-kp/pendaftaran-kp`,
+      {
+        judul_kp,
+        kelas_kp,
+      }
+    );
+    const data = response.data;
+    return data;
+  }
+
   static async createPendaftaranMahasiswa({
     tanggalMulai,
     tujuanSuratInstansi,
     idInstansi,
+    judul_kp,
+    kelas_kp,
   }: CreatePendaftaranMahasiswaInterface) {
     const axios = api();
     const response = await axios.post(
@@ -28,6 +57,8 @@ export default class APIDaftarKP {
         tanggalMulai,
         tujuanSuratInstansi,
         idInstansi,
+        judul_kp,
+        kelas_kp,
       }
     );
     const data = response.data;
@@ -89,7 +120,9 @@ export default class APIDaftarKP {
     return data;
   }
 
-  static async getDataKPMahasiswa(id: string | null | undefined) {
+  static async getDataKPMahasiswa(
+    id: string | null | undefined
+  ): Promise<{ message: string; response: string; data: KPDetailsInterface }> {
     const axios = api();
     const response = await axios.get(
       `${
@@ -211,7 +244,13 @@ export default class APIDaftarKP {
     return data;
   }
 
-  static async postSuratPerpanjanganKP(linkSuratPerpanjanganKP: string) {
+  static async postSuratPerpanjanganKP({
+    linkSuratPerpanjanganKP,
+    alasan_lanjut_kp,
+  }: {
+    linkSuratPerpanjanganKP: string;
+    alasan_lanjut_kp: string;
+  }) {
     const axios = api();
     const response = await axios.post(
       `${
@@ -219,6 +258,7 @@ export default class APIDaftarKP {
       }/mahasiswa/daftar-kp/unggah-surat-perpanjangan-kp`,
       {
         linkSuratPerpanjanganKP,
+        alasan_lanjut_kp,
       }
     );
     const data = response.data;
@@ -313,6 +353,31 @@ export default class APIDaftarKP {
         latitude: dataInstansi.latitude,
         radius: dataInstansi.radius,
       }
+    );
+    const data = response.data;
+    return data;
+  }
+
+  public static async getTahunAjaran(): Promise<getTahunAjaranService> {
+    const axios = api();
+    const response = await axios.get(
+      `${
+        import.meta.env.VITE_BASE_URL_KERJA_PRAKTIK
+      }/daftar-kp/get-tahun-ajaran`
+    );
+    const data = response.data;
+    return data;
+  }
+
+  public static async editDataMahasiswa(
+    dataBaru: PutMahasiswaParamsInterface
+  ): Promise<CommonResponse> {
+    const axios = api();
+    const response = await axios.put(
+      `${
+        import.meta.env.VITE_BASE_URL_KERJA_PRAKTIK
+      }/koordinator-kp/daftar-kp/berkas-mahasiswa`,
+      dataBaru
     );
     const data = response.data;
     return data;

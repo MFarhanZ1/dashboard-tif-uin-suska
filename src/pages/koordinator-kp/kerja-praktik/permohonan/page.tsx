@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import APIDaftarKP from "@/services/api/mahasiswa/daftar-kp.service";
+import { tahunAjaranToStringInterface } from "@/interfaces/helpers/tahun-ajaran-to-string.interface";
 
 // Main component
 export default function KoordinatorKerjaPraktikPermohonanPage() {
@@ -41,6 +42,11 @@ export default function KoordinatorKerjaPraktikPermohonanPage() {
     queryKey: ["daftar-permohonan-mahasiswa"],
     queryFn: () =>
       APIDaftarKP.getAllPermohonanMahasiswa().then((res) => res.data),
+  });
+
+  const { data: tahunAjaran } = useQuery({
+    queryKey: ["data-tahun-ajaran-koordinator-kp"],
+    queryFn: () => APIDaftarKP.getTahunAjaran().then((res) => res.data),
   });
 
   // Data from the image
@@ -119,11 +125,11 @@ export default function KoordinatorKerjaPraktikPermohonanPage() {
                   value={academicYear}
                   onChange={(e) => setAcademicYear(parseInt(e.target.value))}
                 >
-                  <option value={202420251}>2024-2025 Ganjil</option>
-                  <option value={202320241}>2023-2024 Ganjil</option>
-                  <option value={202320242}>2023-2024 Genap</option>
-                  <option value={202220231}>2022-2023 Ganjil</option>
-                  <option value={202220232}>2022-2023 Genap</option>
+                  {tahunAjaran?.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {tahunAjaranToStringInterface(item.id)}
+                    </option>
+                  ))}
                 </select>
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2">
                   <ChevronRight className="h-4 w-4 text-gray-500 rotate-90" />

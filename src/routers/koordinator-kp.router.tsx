@@ -16,7 +16,7 @@ export const koordinatorKPRouter = [
     path: "/koordinator-kp/kerja-praktik/permohonan",
     element: (
       <ProtectedRoute roles={["koordinator-kp"]}>
-        <KoordinatorKerjaPraktikPermohonanPage />
+      <KoordinatorKerjaPraktikPermohonanPage />
       </ProtectedRoute>
     ),
   },
@@ -28,7 +28,7 @@ export const koordinatorKPRouter = [
     path: "/koordinator-kp/kerja-praktik/permohonan/detail-permohonan/:id",
     element: (
       <ProtectedRoute roles={["koordinator-kp"]}>
-        <KoordinatorKerjaPraktikPermohonanDetailPage />
+      <KoordinatorKerjaPraktikPermohonanDetailPage />
       </ProtectedRoute>
     ),
   },
@@ -36,7 +36,7 @@ export const koordinatorKPRouter = [
     path: "/koordinator-kp/kerja-praktik/instansi",
     element: (
       <ProtectedRoute roles={["koordinator-kp"]}>
-        <KoordinatorKerjaPraktikInstansiPage />
+      <KoordinatorKerjaPraktikInstansiPage />
       </ProtectedRoute>
     ),
   },
@@ -48,15 +48,15 @@ export const koordinatorKPRouter = [
     path: "/koordinator-kp/kerja-praktik/instansi/detail-instansi/:id",
     element: (
       <ProtectedRoute roles={["koordinator-kp"]}>
-        <KoordinatorKerjaPraktikDetailInstansiPage />
-      </ProtectedRoute>
+      <KoordinatorKerjaPraktikDetailInstansiPage />
+       </ProtectedRoute>
     ),
   },
   {
     path: "/koordinator-kp/option",
     element: (
       <ProtectedRoute roles={["koordinator-kp"]}>
-        <OptionPage />
+      <OptionPage />
       </ProtectedRoute>
     ),
   },
@@ -64,8 +64,8 @@ export const koordinatorKPRouter = [
     path: "/koordinator-kp/kerja-praktik/permohonan/instansi",
     element: (
       <ProtectedRoute roles={["koordinator-kp"]}>
-        <KoordinatorKerjaPraktikPermohonanDetailPage />
-      </ProtectedRoute>
+      <KoordinatorKerjaPraktikPermohonanDetailPage />
+       </ProtectedRoute>
     ),
   },
   {
