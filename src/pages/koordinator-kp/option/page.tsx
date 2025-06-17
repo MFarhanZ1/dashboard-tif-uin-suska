@@ -4,14 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { api } from "@/lib/axios-instance";
-import { FormEvent, useEffect, useState } from "react";
-
-interface tanggalDaftarKPInterface {
-  tanggal_mulai_pendaftaran_kp: string;
-  tanggal_akhir_pendaftaran_kp: string;
-  tanggal_mulai_pendaftaran_kp_lanjut: string;
-  tanggal_akhir_pendaftaran_kp_lanjut: string;
-}
+import { FormEvent, useState } from "react";
 
 function OptionPage() {
   const [tanggalMulaiPendaftaran, setTanggalMulaiPendaftaran] =
